@@ -5,19 +5,19 @@ from typing import Protocol
 
 
 class Application(Protocol):
-    r"""Base Protocol for an Application wrapper."""
+    """Base Protocol for an Application wrapper."""
 
     name: str
 
 
 class ApplicationMetric(Protocol):
-    r"""Base protocol for an Application Metric."""
+    """Base protocol for an Application Metric."""
 
     # The Application or Service to which the Metric Applies
     application: "Application"
 
     # This should be set to datetime.datetime.now() when compute() is called.
-    computed_at: datetime.datetime
+    computed_at: datetime.datetime | None
 
     # Stores errors that occured during the last computation.
     errors: list[Exception]
