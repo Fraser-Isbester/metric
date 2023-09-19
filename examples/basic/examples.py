@@ -1,10 +1,14 @@
 # examples/basic/examples.py
-from metrics.protocols import Application, ApplicationMetric
+
 import datetime
+
+from metrics.protocols import Application, ApplicationMetric
+
 
 class ExampleApplication(Application):
     def __init__(self, name):
         self.name = name
+
 
 class ExampleMetric(ApplicationMetric):
     def __init__(self, application):
