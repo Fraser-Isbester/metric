@@ -5,7 +5,14 @@ REGISTRY=ghcr.io/fraser-isbester
 IMAGE_NAME=metrics
 TAG=latest
 
-# Build and tag the Docker image
 .PHONY: docker-build
-docker-build:
+docker-build: # Build and tag the Docker image
 	docker build -t $(REGISTRY)/$(IMAGE_NAME):$(TAG) .
+
+
+.PHONY: fix
+fix: # Run's a variety of checks and fixes on the codebase
+	@autoimport .
+	@black .
+	@isort .
+	@ruff . --fix

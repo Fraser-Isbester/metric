@@ -1,3 +1,4 @@
-r"""Contains all Metric types."""
+# Contains all Metric types.
+
 
 __all__ = []
