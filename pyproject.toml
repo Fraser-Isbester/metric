@@ -1,10 +1,13 @@
 [tool.poetry]
-name = "metric"
+name = "metrics"
 version = "0.1.0"
 description = "A lightweight framework for defining arbitrary business metrics as Python code."
 authors = ["Fraser <fraserisbester@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [
+    {include = "metrics", from = "src"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
