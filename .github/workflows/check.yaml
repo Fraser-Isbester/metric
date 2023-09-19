@@ -29,3 +29,7 @@ jobs:
       - name: Check - ${{ matrix.check }}
         run: |
           poetry run ${{ matrix.check }}
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
