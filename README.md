@@ -10,6 +10,7 @@ Let's say you want to write a metric that checks if one of your applications fol
 from metric import Application, ApplicationMetric
 from metric.utils import MatrixRunner
 from metric.types import OutputFormat
+import requests
 
 def main():
     apps = [
@@ -18,31 +19,44 @@ def main():
             "myorg-sales-app", "sandbox-dinasour"
         ]
     ]
-    metrics = [AppNameCompliance]
+    metrics = [AppNameCompliance, AppAPIConformaty]
 
     # This returns ApplicationMetric's, but we'll just read stdout. 
     MatrixRunner(format=OutputFormat.OUTPUT_FORMAT_TABLE).run(apps, metrics)
 
 class AppNameCompliance(ApplicationMetricBoolean):
-    """All Applications should be named myorg-<appname>"""
+    """All Applications should be named myorg-<appname>."""
 
     def compute(self):
-        try:
-            self.value = False
-            if self.application.name.startswith("myorg-"):
-                self.value = True
-            return True, self.value
-        except Exception as e:
-            self.errors.append(e)
-            return False, None
+        if self.application.name.startswith("myorg-"):
+            return True, True
+        return False, False
+
+class AppAPIConformaty(ApplicationMetricBoolean):
+    """All Applications should have predictable endpoints based on name.
+    e.g. - myorg-finance-service -> api.myorg.com/finance
+         - sandbox-dinasour -> api.myorg.com/sandbox_dinasour
+    """
+
+    def compute(self):
+        r = requests.get(f"https://api.myorg.com/{self.app_name_to_method()}")
+        if r.ok:
+            return True
+        return False
+    
+    def app_name_to_method(self):
+        return self.application.name \
+            .replace("myorg-", "") \
+            .replace("-service", "") \
+            .replace("-", "_")
 ```
 
 If we run this code, we'll get the following output:
 
 ```bash
-Application             AppNameCompliance
-myorg-finance-app                    True
-myorg-marketing-service              True
-myorg-sales-app                      True
-sandbox-dinasour                    False
+Application             AppNameCompliance       AppAPIConformaty
+myorg-finance-app                    True                  False
+myorg-marketing-service              True                  False
+myorg-sales-app                      True                  False
+sandbox-dinasour                    False                  False
 ```
