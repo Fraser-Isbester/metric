@@ -1,4 +1,5 @@
 # Contains all Metric types.
 
+from metrics.types.enums import OutputFormat
 
-__all__ = []
+__all__ = [OutputFormat]

@@ -7,6 +7,8 @@ from typing import Protocol
 class Application(Protocol):
     r"""Base Protocol for an Application wrapper."""
 
+    name: str
+
 
 class ApplicationMetric(Protocol):
     r"""Base protocol for an Application Metric."""
