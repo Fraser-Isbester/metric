@@ -12,7 +12,12 @@ from metric.utils import MatrixRunner
 from metric.types import OutputFormat
 
 def main():
-    apps = ["myorg-finance-app", "myorg-marketing-service", "myorg-sales-app", "sandbox-dinasour"]
+    apps = [
+        Application(app) for app in [
+            "myorg-finance-app", "myorg-marketing-service",
+            "myorg-sales-app", "sandbox-dinasour"
+        ]
+    ]
     metrics = [AppNameCompliance]
 
     # This returns ApplicationMetric's, but we'll just read stdout. 
