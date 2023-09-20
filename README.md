@@ -1,4 +1,4 @@
-[![Check All](https://github.com/Fraser-Isbester/metric/actions/workflows/check.yaml/badge.svg)](https://github.com/Fraser-Isbester/metric/actions/workflows/check.yaml)
+[![Check All](https://github.com/Fraser-Isbester/metric/actions/workflows/check.yaml/badge.svg)](https://github.com/Fraser-Isbester/metric/actions/workflows/check.yaml) [![Build & Publish](https://github.com/Fraser-Isbester/metric/actions/workflows/build-and-publish.yaml/badge.svg)](https://github.com/Fraser-Isbester/metric/actions/workflows/build-and-publish.yaml)
 
 # ✨Abstract✨ metrics
 A lightweight framework for defining arbitrary business metrics as Python code.
