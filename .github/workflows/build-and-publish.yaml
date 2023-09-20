@@ -1,0 +1,45 @@
+name: Publish to PyPI
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "pyproject.toml"
+      - "poetry.lock"
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      poetry_version: "1.6.1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --user pipx
+          pipx install poetry==${{ env.poetry_version }}
+          poetry install
+      - name: Configure Test PyPI Configuration
+        run: |
+          poetry config repositories.test-pypi https://test.pypi.org/legacy/
+          poetry config pypi-token.test-pypi ${{ secrets.TEST_PYPI_ABSTRACT_METRICS_TOKEN }}
+      - name: Configure PyPI Configuration
+        run: |
+          poetry config repositories.pypi https://upload.pypi.org/legacy/
+          poetry config pypi-token.pypi ${{ secrets.PYPI_ABSTRACT_METRICS_TOKEN }}
+      - name: Build Package
+        run: poetry build
+      - name: Publish Test Package
+        run: |
+          poetry publish \
+            --no-interaction \
+            --repository test-pypi
+      - name: Publish Package
+        run: |
+          poetry publish \
+            --no-interaction \
+            --repository pypi
