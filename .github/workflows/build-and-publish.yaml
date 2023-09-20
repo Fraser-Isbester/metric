@@ -31,7 +31,7 @@ jobs:
         run: |
           pip install abstract-metrics==$(poetry version --short) || exit 0
           echo "Package already exists on PyPI -- run poetry version bump"
-          exit 
+          exit 1
 
   publish:
     runs-on: ubuntu-latest
