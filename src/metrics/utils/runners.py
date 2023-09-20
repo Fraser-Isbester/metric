@@ -31,7 +31,7 @@ class MatrixRunner(BaseRunner):
 
         if not isinstance(format, OutputFormat):
             raise TypeError(
-                f"Expected format type to be an {type(OutputFormat)}, got {type(format)}"
+                f"Expected type to be `{type(OutputFormat)}`, got `{type(format)}`"
             )
 
         application_metrics = []

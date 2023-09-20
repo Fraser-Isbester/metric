@@ -19,3 +19,8 @@ fix: # Run's a variety of checks and fixes on the codebase
 	@black .
 	@isort .
 	@ruff . --fix
+
+.PHONY: clean
+clean:
+	rm -r .pytest_cache .ruff_cache dist
+	rm -r src/**/__pycache__ src/**/.pytest_cache src/**/.ruff_cache
