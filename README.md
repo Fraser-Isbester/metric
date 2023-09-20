@@ -3,62 +3,54 @@
 # ✨Abstract✨ metrics
 A lightweight framework for defining arbitrary business metrics as Python code.
 
+# Installation
+```bash
+pip install abstract-metrics
+```
+
 # Basic Usage
 
-Let's say you want to write a metric that checks if one of your applications follows your organizations application naming standards. Here's how we could write that metric, and calculate compliance:
+1. Install
+2. Subclass one of the metric types (e.g. ApplicationMetricBoolean)
+3. Add an optimistic `compute` method that returns your metric.
+4. Register a runner with your metric and run it!
+
+# Example
+Let's say you want to write a metric that checks if one of your applications follows your organizations application naming standards. We will use the ApplicationMetricBoolean type to do this. All metrics are formated as `{subject}Metric{type}`. In this case, our subject is an `Application` and our type is `Boolean`.
+
+Because Applications are our subject, we need to subclass `ApplicationMetricBoolean`. This class has a few methods that we can use to help us compute our metric. The most important one is `compute`. This method is called by the runner and should return a the boolean value. Additionally, we should use the `application` property (via the `Application` wrapper) to store any context we need to compute this metric.
 
 ```python
 
 from metric import Application, ApplicationMetric
 from metric.utils import MatrixRunner
 from metric.types import OutputFormat
-import requests
 
 def main():
-    apps = [
-        Application(app) for app in [
-            "myorg-finance-app", "myorg-marketing-service",
-            "myorg-sales-app", "sandbox-dinasour"
-        ]
-    ]
-    metrics = [AppNameCompliance, AppAPIConformaty]
+    # Construct list of basic Application objects
+    apps = [Application(app) for app in ["myorg-sales-app", "sandbox-dinasour"]]
+    # Construct a list of our metrics
+    metrics = [AppNameCompliance]
 
-    # This returns ApplicationMetric's, but we'll just read stdout. 
+    # This will not only construct our Application Metrics but it will also execute
+    # them and print them to stdout as a table.
     MatrixRunner(format=OutputFormat.OUTPUT_FORMAT_TABLE).run(apps, metrics)
 
 class AppNameCompliance(ApplicationMetricBoolean):
-    """All Applications should be named myorg-<appname>."""
+    r"""All Application names should start with 'myorg-'."""
 
     def compute(self):
         if self.application.name.startswith("myorg-"):
-            return True, True
-        return False, False
-
-class AppAPIConformaty(ApplicationMetricBoolean):
-    """All Applications should have predictable endpoints based on name.
-    e.g. - myorg-finance-service -> api.myorg.com/finance
-         - sandbox-dinasour -> api.myorg.com/sandbox_dinasour
-    """
-
-    def compute(self):
-        r = requests.get(f"https://api.myorg.com/{self.app_name_to_method()}")
-        if r.ok:
             return True
         return False
-    
-    def app_name_to_method(self):
-        return self.application.name \
-            .replace("myorg-", "") \
-            .replace("-service", "") \
-            .replace("-", "_")
 ```
 
 If we run this code, we'll get the following output:
 
 ```bash
-Application             AppNameCompliance       AppAPIConformaty
-myorg-finance-app                    True                  False
-myorg-marketing-service              True                  False
-myorg-sales-app                      True                  False
-sandbox-dinasour                    False                  False
+Application             AppNameCompliance
+myorg-finance-app                    True
+myorg-marketing-service              True
+myorg-sales-app                      True
+sandbox-dinasour                    False
 ```
