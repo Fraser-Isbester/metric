@@ -26,6 +26,8 @@ jobs:
           python -m pip install --user pipx
           pipx install poetry==${{ env.poetry_version }}
           poetry install --with dev
+      - name: Poetry Check
+        run: poetry check
       - name: Check - ${{ matrix.check }}
         run: |
           poetry run ${{ matrix.check }}
