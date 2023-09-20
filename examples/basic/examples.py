@@ -1,31 +1,26 @@
 # examples/basic/examples.py
 
-import datetime
+from metrics.types import (Application, ApplicationMetricBoolean,
+                           ApplicationMetricNumeric)
 
-from metrics.protocols import Application, ApplicationMetric
+APPS = [
+    Application("examples-service-1"),
+    Application("examples-service-2"),
+    Application("silly-service"),
+]
 
 
-class ExampleApplication(Application):
-    def __init__(self, name):
-        self.name = name
+class AppNameCompliance(ApplicationMetricBoolean):
+    r"""All Application names should start with 'examples-'."""
+
+    def compute(self):
+        if self.application.name.startswith("examples-"):
+            return True
+        return False
 
 
-class ExampleMetric(ApplicationMetric):
-    def __init__(self, application):
-        self.application = application
-        self.computed_at = None
-        self.errors = []
-        self._value = None
-
-    @property
-    def value(self) -> float | None:
-        return self._value
+class AppNameUnder35(ApplicationMetricNumeric):
+    """All Application names must be <= 35 characters long."""
 
     def compute(self) -> bool:
-        try:
-            self._value = 42  # An example metric computation
-            self.computed_at = datetime.datetime.now()
-            return True
-        except Exception as e:
-            self.errors.append(e)
-            return False
+        return len(self.application.name) <= 35
