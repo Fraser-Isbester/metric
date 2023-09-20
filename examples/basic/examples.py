@@ -1,7 +1,10 @@
 # examples/basic/examples.py
 
-from metrics.types import (Application, ApplicationMetricBoolean,
-                           ApplicationMetricNumeric)
+from metrics.types import (
+    Application,
+    ApplicationMetricBoolean,
+    ApplicationMetricNumeric,
+)
 
 APPS = [
     Application("examples-service-1"),
