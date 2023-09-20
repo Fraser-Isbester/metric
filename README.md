@@ -1,4 +1,6 @@
-# metric
+[![Check All](https://github.com/Fraser-Isbester/metric/actions/workflows/check.yaml/badge.svg)](https://github.com/Fraser-Isbester/metric/actions/workflows/check.yaml)
+
+# ✨Abstract✨ metrics
 A lightweight framework for defining arbitrary business metrics as Python code.
 
 # Basic Usage
