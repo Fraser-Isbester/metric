@@ -2,6 +2,7 @@
 
 import datetime
 from numbers import Number
+
 from metrics.types import (
     Application,
     ApplicationMetricBoolean,

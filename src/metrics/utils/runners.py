@@ -1,10 +1,10 @@
 # Contains various metric runners
 
-from typing import List, Union
 from enum import Enum
+from typing import List, Union
 
-from metrics.types import base as t
 from metrics.types import OutputFormat
+from metrics.types import base as t
 
 
 class BaseRunner:
@@ -17,9 +17,7 @@ class MatrixRunner(BaseRunner):
     def run(
         self,
         metrics: List[t.ApplicationMetric],
-        applications: Union[
-            List[t.Application], List[str]
-        ],
+        applications: Union[List[t.Application], List[str]],
         format: Enum = OutputFormat.OUTPUT_FORMAT_LOG,
     ) -> List[t.ApplicationMetric]:
         r"""Builds & Runs metric generation."""
@@ -36,7 +34,7 @@ class MatrixRunner(BaseRunner):
                 application = t.Application(name=application)
 
             for Metric in metrics:
-                metric = Metric(application) # type: ignore
+                metric = Metric(application)  # type: ignore
                 metric.compute_and_set()
                 application_metrics.append(metric)
 

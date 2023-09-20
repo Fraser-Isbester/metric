@@ -1,7 +1,7 @@
 import datetime
+import json
 from abc import ABC, abstractmethod
 from typing import Any, Final, List, Optional, Union
-import json
 
 
 class Application(ABC):
