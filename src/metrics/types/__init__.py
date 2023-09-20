@@ -8,8 +8,8 @@ from metrics.types.base import (
 from metrics.types.enums import OutputFormat
 
 __all__ = [
-    OutputFormat,
-    Application,
-    ApplicationMetricBoolean,
-    ApplicationMetricNumeric,
+    "OutputFormat",
+    "Application",
+    "ApplicationMetricBoolean",
+    "ApplicationMetricNumeric",
 ]

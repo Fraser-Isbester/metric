@@ -1,8 +1,9 @@
 # Contains various metric runners
 
-from typing import Enum, List, Union
+from typing import List, Union
+from enum import Enum
 
-from metrics import protocols
+from metrics.types import base as t
 from metrics.types import OutputFormat
 
 
@@ -15,19 +16,13 @@ class MatrixRunner(BaseRunner):
 
     def run(
         self,
-        metrics: protocols.ApplicationMetric | List[protocols.ApplicationMetric],
+        metrics: List[t.ApplicationMetric],
         applications: Union[
-            List[protocols.Application], List[str], protocols.Application, str
+            List[t.Application], List[str]
         ],
-        format: Enum = OutputFormat.LOG,
-    ) -> List[protocols.ApplicationMetric]:
+        format: Enum = OutputFormat.OUTPUT_FORMAT_LOG,
+    ) -> List[t.ApplicationMetric]:
         r"""Builds & Runs metric generation."""
-
-        if not isinstance(metrics, list):
-            metrics = [metrics]
-
-        if not isinstance(applications, list):
-            applications = [applications]
 
         if not isinstance(format, OutputFormat):
             raise TypeError(
@@ -38,15 +33,16 @@ class MatrixRunner(BaseRunner):
         for application in applications:
             # If string passed, convert to Application object.
             if isinstance(application, str):
-                application = protocols.Application(name=application)
+                application = t.Application(name=application)
 
-            for metric in metrics:
-                metric = metric(application)
-                metric.compute()
+            for Metric in metrics:
+                metric = Metric(application) # type: ignore
+                metric.compute_and_set()
                 application_metrics.append(metric)
 
                 if format == OutputFormat.OUTPUT_FORMAT_LOG:
-                    print(metric)
-                    print(f"{metric.application.name:<20}: {metric.value:.1f}")
+                    metric_name = metric.__class__.__name__
+                    app_name = metric.application.name
+                    print(f"{app_name}/{metric_name:<20}: {metric.value:.1f}")
 
         return application_metrics
