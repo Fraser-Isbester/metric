@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from enum import Enum
 from typing import List, Union
 
@@ -32,13 +33,16 @@ class MatrixRunner(BaseRunner):
                 application = t.Application(name=application)
 
             for Metric in metrics:
-                metric = Metric(application)
+                metric = Metric(application)  # type: ignore
                 metric.compute_and_set()
                 application_metrics.append(metric)
 
                 if format == OutputFormat.OUTPUT_FORMAT_LOG:
-                    print(
-                        f"{application.name}/{metric.__class__.__name__}: {metric.value}"
+                    logging.info(
+                        "%s/%s: %s",
+                        application.name,
+                        metric.__class__.__name__,
+                        metric.value,
                     )
 
         return application_metrics
@@ -52,8 +56,11 @@ class MatrixRunner(BaseRunner):
         async def compute_metric(metric):
             metric.compute_and_set()
             if format == OutputFormat.OUTPUT_FORMAT_LOG:
-                print(
-                    f"{metric.application.name}/{metric.__class__.__name__}: {metric.value}"
+                logging.info(
+                    "%s/%s: %s",
+                    metric.application.name,
+                    metric.__class__.__name__,
+                    metric.value,
                 )
 
         async def async_run():
@@ -70,7 +77,7 @@ class MatrixRunner(BaseRunner):
                     application = t.Application(name=application)
 
                 for Metric in metrics:
-                    metric = Metric(application)
+                    metric = Metric(application)  # type: ignore
                     application_metrics.append(metric)
                     tasks.append(compute_metric(metric))
 
