@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "abstract-metrics"
-version = "0.1.0-dev.4"
+version = "0.1.0-dev.5"
 description = "A lightweight framework for defining arbitrary business metrics as Python code."
 authors = ["Fraser <fraserisbester@gmail.com>"]
 license = "MIT"
