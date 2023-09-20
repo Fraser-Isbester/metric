@@ -1,6 +1,7 @@
 import datetime
 from abc import ABC, abstractmethod
-from typing import Any, Final, List, Optional
+from typing import Any, Final, List, Optional, Union
+import json
 
 
 class Application(ABC):
@@ -35,7 +36,14 @@ class ApplicationMetric(ABC):
     def compute(self) -> Any:
         ...
 
-    def asdict(self) -> dict[str, Any]:
+    def compute_and_set(self) -> None:
+        """This runs a computation and set's the value."""
+        try:
+            self.value = self.compute()
+        except Exception as e:
+            self.errors.append(e)
+
+    def asdict(self) -> dict[str, Union[str, datetime.datetime, list[Exception], None]]:
         return {
             "application": self.application.name,
             "metric": self.__class__.__name__,
@@ -43,6 +51,9 @@ class ApplicationMetric(ABC):
             "errors": self.errors,
             "value": self.value,
         }
+
+    def asjson(self) -> str:
+        return json.dumps(self.asdict())
 
 
 class ApplicationMetricNumeric(ApplicationMetric):

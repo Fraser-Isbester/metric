@@ -13,7 +13,7 @@ jobs:
             - black --check .
             - ruff .
             - pyright src/ tests/
-            - pytest .
+            - pytest . -vv
     env:
       poetry_version: "1.6.1"
     steps:

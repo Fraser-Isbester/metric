@@ -5,12 +5,17 @@ from metrics.types import (
     ApplicationMetricBoolean,
     ApplicationMetricNumeric,
 )
+from metrics.utils import MatrixRunner
 
-APPS = [
-    Application("examples-service-1"),
-    Application("examples-service-2"),
-    Application("silly-service"),
-]
+
+def main():
+    apps = [
+        Application("examples-service-1"),
+        Application("examples-service-2"),
+        Application("silly-service"),
+    ]
+    metrics = [AppNameCompliance, AppNameUnder35]
+    MatrixRunner().run(apps, metrics)
 
 
 class AppNameCompliance(ApplicationMetricBoolean):
