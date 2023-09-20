@@ -1,5 +1,8 @@
 # examples/basic/examples.py
 
+import time
+from random import randint
+
 from metrics.types import (
     Application,
     ApplicationMetricBoolean,
@@ -9,13 +12,14 @@ from metrics.utils import MatrixRunner
 
 
 def main():
-    apps = [
+    applications = [
         Application("examples-service-1"),
         Application("examples-service-2"),
         Application("silly-service"),
     ]
-    metrics = [AppNameCompliance, AppNameUnder35]
-    MatrixRunner().run(apps, metrics)
+    metrics = [AppNameCompliance, AppNameLength, CallTime]
+    runner = MatrixRunner()
+    runner.run(metrics, applications)
 
 
 class AppNameCompliance(ApplicationMetricBoolean):
@@ -27,8 +31,21 @@ class AppNameCompliance(ApplicationMetricBoolean):
         return False
 
 
-class AppNameUnder35(ApplicationMetricNumeric):
+class AppNameLength(ApplicationMetricNumeric):
     """All Application names must be <= 35 characters long."""
 
     def compute(self) -> bool:
-        return len(self.application.name) <= 35
+        return len(self.application.name)
+
+
+class CallTime(ApplicationMetricNumeric):
+    """Captures a fake api call time."""
+
+    def compute(self) -> bool:
+        sleeptime = randint(0, 100) / 100
+        time.sleep(sleeptime)
+        return sleeptime
+
+
+if __name__ == "__main__":
+    main()
