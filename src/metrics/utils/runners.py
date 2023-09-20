@@ -41,6 +41,6 @@ class MatrixRunner(BaseRunner):
                 if format == OutputFormat.OUTPUT_FORMAT_LOG:
                     metric_name = metric.__class__.__name__
                     app_name = metric.application.name
-                    print(f"{app_name}/{metric_name:<20}: {metric.value:.1f}")
+                    print(f"{app_name}/{metric_name}: {metric.value}")
 
         return application_metrics

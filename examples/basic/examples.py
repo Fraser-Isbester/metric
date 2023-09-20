@@ -14,8 +14,8 @@ def main():
         Application("examples-service-2"),
         Application("silly-service"),
     ]
-    metrics = [AppNameCompliance, AppNameUnder35]
-    MatrixRunner().run(apps, metrics)
+    metrics = [AppNameCompliance, AppNameLength]
+    MatrixRunner().run(metrics, apps)
 
 
 class AppNameCompliance(ApplicationMetricBoolean):
@@ -27,8 +27,12 @@ class AppNameCompliance(ApplicationMetricBoolean):
         return False
 
 
-class AppNameUnder35(ApplicationMetricNumeric):
+class AppNameLength(ApplicationMetricNumeric):
     """All Application names must be <= 35 characters long."""
 
     def compute(self) -> bool:
-        return len(self.application.name) <= 35
+        return len(self.application.name)
+
+
+if __name__ == "__main__":
+    main()
