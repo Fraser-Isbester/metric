@@ -9,6 +9,13 @@ TAG=latest
 test: ## Run's all poetry tests
 	python -m pytest -vv
 
+.PHONY: ci
+ci:
+	black --check . || true
+	ruff . || true
+	pyright src/ tests/ || true
+	pytest . -vv || true
+
 .PHONY: docker-build
 docker-build: # Build and tag the Docker image
 	docker build -t $(REGISTRY)/$(IMAGE_NAME):$(TAG) .

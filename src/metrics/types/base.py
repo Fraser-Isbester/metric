@@ -1,12 +1,12 @@
 import datetime
+import json
 from abc import ABC, abstractmethod
-from typing import Any, Final, List, Optional
+from typing import Any, Final, List, Optional, Union
 
 
 class Application(ABC):
     """Base class for an Application wrapper."""
 
-    @abstractmethod
     def __init__(self, name: str):
         self.name = name
 
@@ -14,7 +14,6 @@ class Application(ABC):
 class ApplicationMetric(ABC):
     """Defines an Application specific Metric"""
 
-    @abstractmethod
     def __init__(self, application: Application):
         """Initialies the metric with the application it is associated to."""
         self.application: Final[Application] = application
@@ -34,10 +33,17 @@ class ApplicationMetric(ABC):
         self._value = value
 
     @abstractmethod
-    def compute(self) -> (bool, Any):
+    def compute(self) -> Any:
         ...
 
-    def asdict(self) -> dict[str, Any]:
+    def compute_and_set(self) -> None:
+        """This runs a computation and set's the value."""
+        try:
+            self.value = self.compute()
+        except Exception as e:
+            self.errors.append(e)
+
+    def asdict(self) -> dict[str, Union[str, datetime.datetime, list[Exception], None]]:
         return {
             "application": self.application.name,
             "metric": self.__class__.__name__,
@@ -46,12 +52,15 @@ class ApplicationMetric(ABC):
             "value": self.value,
         }
 
+    def asjson(self) -> str:
+        return json.dumps(self.asdict())
 
-class NumericApplicationMetric(ApplicationMetric):
-    @property
-    @abstractmethod
-    def value(self) -> Optional[float]:
-        return self._value
 
-    def compute(self) -> (bool, Optional[float]):
+class ApplicationMetricNumeric(ApplicationMetric):
+    def compute(self) -> Optional[float]:
+        ...
+
+
+class ApplicationMetricBoolean(ApplicationMetric):
+    def compute(self) -> Optional[bool]:
         ...
